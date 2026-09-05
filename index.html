@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HillGuard - Offline Landslide Reporter & Mesh Relay</title>
+  <link rel="manifest" href="data:application/manifest+json,{%22name%22:%22HillGuard%22,%22short_name%22:%22HillGuard%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22}">
+  
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/vision_bundle.js" crossorigin="anonymous"></script>
+  
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --text: #f8fafc;
+      --accent: #f59e0b;
+      --danger: #ef4444;
+      --success: #10b981;
+      --border: #334155;
+    }
+    body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 16px; line-height: 1.5; }
+    .container { max-width: 600px; margin: 0 auto; }
+    .banner { display: none; background: var(--danger); color: #fff; padding: 16px; border-radius: 8px; font-weight: 700; text-align: center; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4); }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+    h1 { font-size: 1.5rem; text-align: center; margin-bottom: 20px; color: #fbbf24; }
+    h2 { font-size: 1.1rem; margin-top: 0; color: #94a3b8; }
+    button { background: var(--accent); border: none; padding: 14px; color: #0f172a; font-weight: 700; border-radius: 8px; width: 100%; cursor: pointer; transition: background 0.2s; font-size: 0.95rem; margin-top: 10px; }
+    button:hover { filter: brightness(1.1); }
+    button.danger { background: var(--danger); color: #fff; }
+    input[type="file"] { margin: 12px 0; width: 100%; color: #94a3b8; }
+    .badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; }
+    .badge-high { background: #fee2e2; color: #991b1b; }
+    .badge-med { background: #fef3c7; color: #92400e; }
+    .badge-low { background: #d1fae5; color: #065f46; }
+    .preview-img { max-width: 100%; height: auto; border-radius: 8px; margin-top: 10px; display: none; border: 1px solid var(--border); }
+    .log-item { border-top: 1px solid var(--border); padding-top: 12px; margin-top: 12px; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div id="alertBanner" class="banner">🚨 EMERGENCY ALERT: OFFICIAL HIGH LANDSLIDE RISK ISSUED! EVACUATE SLOPES!</div>
+
+    <h1>🏔️ HillGuard Offline Mesh</h1>
+
+    <div class="card">
+      <h2>Report Slope Hazard (On-Device AI)</h2>
+      <input type="file" id="photoInput" accept="image/*" onchange="previewSelectedImage(event)">
+      <img id="imagePreview" class="preview-img" alt="Selected Hazard Preview">
+      <button id="analyzeBtn" onclick="analyzeAndReport()">Analyze & Save Report</button>
+      <div id="reportStatus"></div>
+    </div>
+
+    <div class="card">
+      <h2>P2P Mesh Alert Relay</h2>
+      <button class="danger" onclick="broadcastAlert()">Broadcast Emergency Alert (Bluetooth)</button>
+      <button onclick="listenForRelay()">Listen for Nearby Peer Alerts</button>
+      <div id="relayStatus" style="margin-top: 10px; font-size: 0.9rem; color: #cbd5e1;"></div>
+    </div>
+
+    <div class="card">
+      <h2>Offline Stored Incident Queue</h2>
+      <div id="incidentLog">No offline reports queued.</div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html> 
